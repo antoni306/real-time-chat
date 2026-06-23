@@ -1,0 +1,42 @@
+# Zależności
+node_modules
+npm-debug.log
+
+# Foldery build
+dist
+build
+.next
+out
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+
+# Logi i tymczasowe
+logs
+*.log
+tmp
+temp
+
+# Pliki środowiskowe
+.env
+.env.local
+.env*.local
+
+# Testy i coverage
+coverage
+.nyc_output
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# System
+.DS_Store
+Thumbs.db

@@ -1,0 +1,39 @@
+services:
+  web:
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:  
+        condition: service_healthy
+    build: .
+  postgres:
+    env_file:
+        - .env
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - postgresVolume:/data/postgres
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - redisVolume:/data/redis
+volumes:
+  postgresVolume:
+  redisVolume:
