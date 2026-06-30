@@ -24,7 +24,7 @@ export class ChatGateway implements OnGatewayConnection,OnGatewayDisconnect{
   @SubscribeMessage('sendMessage')
   @UseGuards(JwtWebSocketGuard)
   async sendMessage(sender: Socket, payload:{conversationId:string,message:string}): Promise<void> {
-    await this.chatService.sendMessage(payload.conversationId,payload.message,sender.data.userId);
+    await this.chatService.sendMessage(payload.message,sender.data.userId,payload.conversationId);
     this.server.to(payload.conversationId).emit('newMessage',{message:payload.message, senderId:sender.data.userId});
   }
 
@@ -37,6 +37,7 @@ export class ChatGateway implements OnGatewayConnection,OnGatewayDisconnect{
       client.join(payload.conversationId);
     }catch(error){
       console.error(error);
+      client.emit('error',{message:(error as NotFoundException).message});
     }
 
   }

@@ -37,8 +37,8 @@ export class AuthService {
         const accessToken = this.jwtService.sign({sub:user.id}, {secret:this.configService.get("JWT_SECRET"),expiresIn:3600})
         
         const refreshToken = this.jwtService.sign({sub:user.id},{secret:this.configService.get("JWT_REFRESH_SECRET"),expiresIn:60*60*24*7});
-
-        user.refreshTokenHash= await bcrypt.hash(refreshToken,parseInt(this.configService.get<string>("SALT_ROUNDS") as string));
+        const signature = refreshToken.split('.').pop() as string;
+        user.refreshTokenHash= await bcrypt.hash(signature,parseInt(this.configService.get<string>("SALT_ROUNDS") as string));
         await this.userRepo.save(user);
         
         return {accessToken,refreshToken};
@@ -53,22 +53,35 @@ export class AuthService {
         user.refreshTokenHash=null;
         await this.userRepo.save(user);
     }
+    async validRefreshToken(userId:string,signature:string):Promise<boolean>{
+        console.log(`beginning validRefreshToken: ${Date.now()}`)
 
-    async refreshTokens(userId:string,refreshToken:string):Promise<{accessToken:string,refreshToken:string}>{
         const user = await this.userRepo.findOneBy({id:userId});
-
+        console.log('function validRefreshToken: token: ', signature);
         if(!user){
             throw new NotFoundException(`user with id ${userId} not found`);
         }
-
-        const refreshTokenHash=user.refreshTokenHash;
-        if(!bcrypt.compareSync(refreshToken,refreshTokenHash ?? "")){
-            throw new NotFoundException(`user with ${userId} not found`);
+        if(!user.refreshTokenHash){
+            throw new UnauthorizedException(`user with id ${userId} doesn't have refresh token`); 
         }
+        console.log('function validRefreshToken: hash in db:', user.refreshTokenHash);
+        console.log('function validRefreshToken: result compare:', bcrypt.compareSync(signature, user.refreshTokenHash));
+        console.log(`end validRefreshToken: ${Date.now()}`)
+
+        return bcrypt.compareSync(signature,user.refreshTokenHash);
+    }
+    async refreshTokens(userId:string):Promise<{accessToken:string,refreshToken:string}>{
+        console.log(`beginning refreshTokens: ${Date.now()}`)
+        const user = await this.userRepo.findOneBy({id:userId}) as User;
+
+        
         const newRefreshToken = this.jwtService.sign({sub:userId},{secret:this.configService.get("JWT_REFRESH_SECRET"),expiresIn:60*60*24*7});
-        user.refreshTokenHash = await bcrypt.hash(newRefreshToken,parseInt(this.configService.get<string>("SALT_ROUNDS") as string));
+        const signature = newRefreshToken.split(".").pop() as string;
+        user.refreshTokenHash = await bcrypt.hash(signature,parseInt(this.configService.get<string>("SALT_ROUNDS") as string));
         await this.userRepo.save(user);
+        console.log(`function refreshTokens: new generated refreshToken ${newRefreshToken}, hash ${user.refreshTokenHash}`);
         const accessToken = this.jwtService.sign({sub:userId},{secret:this.configService.get("JWT_SECRET"), expiresIn:3600});
+        console.log(`end refreshTokens: ${Date.now()}`)
 
         return {
             accessToken,

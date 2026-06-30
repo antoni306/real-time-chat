@@ -30,7 +30,7 @@ export class AuthController {
     @UseGuards(JwtRefreshGuard)
     @Post('refreshTokens')
     async refreshTokens(@CurrentUser() payload:{id:string,refreshToken:string}){
-        return this.authService.refreshTokens(payload.id,payload.refreshToken);
+        return this.authService.refreshTokens(payload.id);
     }
 
 }

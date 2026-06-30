@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Conversation } from 'src/conversation/conversation.entity';
 import { ConversationService } from 'src/conversation/conversation.service';
@@ -21,13 +21,17 @@ export class ChatService {
     ){}
 
 
-    async sendMessage(conversationId:string,message:string,senderId:string):Promise<void>{
-        await this.messageSerivce.create(message,conversationId,senderId);
-        
+    async sendMessage(message:string,senderId:string, conversationId:string):Promise<void>{
+        await this.messageSerivce.create(message,senderId,conversationId);
+    
     }
 
     async joinConversation(clientd: string, conversationId: string):Promise<boolean> {
-        return await this.participantService.isParticipant(clientd,conversationId);
+        const isParticipant= await this.participantService.isParticipant(clientd,conversationId);
+        if(!isParticipant){
+            throw new NotFoundException(`Client with id ${clientd} is not a member of conversation ${conversationId}`);
+        }
+        return true;
     }
 
 

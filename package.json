@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "@nestjs/common": "^11.1.27",
+    "@nestjs/typeorm": "^11.0.3",
+    "@nestjs/websockets": "^11.1.27",
+    "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3"
   }
 }
