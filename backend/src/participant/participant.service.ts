@@ -9,9 +9,8 @@ export class ParticipantService {
         @InjectRepository(Participant) private readonly participantRepo:Repository<Participant>
     ){}
 
-    async create(userId:string,conversationId:string):Promise<Participant>{
-        const participant = this.participantRepo.create({user:{id:userId},conversation:{id:conversationId}});
-        return await this.participantRepo.save(participant);
+    buildParticipant(userId:string):Participant{
+        return this.participantRepo.create({user:{id:userId}});
     }
 
     async findByConversation(conversationId:string):Promise<Participant[]>{

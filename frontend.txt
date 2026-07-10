@@ -1,0 +1,23 @@
+Wszystko przetestowane end-to-end (dwóch użytkowników rejestracja→login→utworzenie konwersacji→wymiana wiadomości w obie strony, ze zrzutami ekranu) i działa.
+
+  Co zrobiłem:
+
+  1. Backend (drobne, niezbędne zmiany, zgodnie z Twoim wyborem):
+    - Dodałem GET /user?username= (backend/src/user/user.controller.ts, chronione JWT) — bez tego frontend nie miałby jak zamienić nazwy użytkownika na UUID
+  wymagane przez POST /conversation.
+    - Włączyłem CORS w main.ts — REST API nie miało go wcale, więc frontend z innego originu (localhost:5173) nie mógłby się komunikować.
+  2. Nowy folder frontend/ — Vite + React + TypeScript, socket.io-client, react-router-dom:
+    - /register, /login — rejestracja i logowanie, tokeny w localStorage, auto-refresh accessTokena przez /auth/refreshTokens przy 401.
+    - / (dashboard) — tworzenie konwersacji DIRECT/GROUP po nazwie użytkownika (z lookupem przez nowy endpoint), dołączanie po wklejonym ID konwersacji, lista
+  konwersacji utworzonych w tej przeglądarce (localStorage, bo backend nie ma endpointu listującego konwersacje użytkownika).
+    - /chat/:id — join przez WebSocket (joinConversation), wysyłanie/odbiór wiadomości na żywo (sendMessage/newMessage).
+
+  Ograniczenie do świadomości: backend nie ma endpointu do historii wiadomości ani listy konwersacji użytkownika — czat pokazuje tylko wiadomości wysłane od
+  momentu dołączenia (zaznaczyłem to też w UI).
+
+  Jak odpalić:
+  - Backend: docker compose up -d postgres redis (już działają, zostawiłem uruchomione), potem w backend/ npm run start:dev (stworzyłem backend/.env z configiem
+  pod lokalny dev, host localhost:5433).
+  - Frontend: w frontend/ npm run dev (zależności już zainstalowane), config w frontend/.env (VITE_API_URL, VITE_WS_URL).
+
+  Zatrzymałem procesy dev, które uruchamiałem do testów — kontenery postgres/redis zostawiłem włączone, żebyś mógł od razu testować.

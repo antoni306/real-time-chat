@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ConversationType } from "./conversation-type.enum";
 import { Message } from "../message/message.entity";
 import { Participant } from "../participant/participant.entity";
@@ -21,6 +21,6 @@ export class Conversation {
     @OneToMany(()=>Message,(message)=>message.conversation)
     messages:Message[];
 
-    @OneToMany(()=>Participant,participant=>participant.conversation)
+    @OneToMany(()=>Participant,participant=>participant.conversation,{cascade:true})
     participants:Participant[];
 }

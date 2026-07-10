@@ -12,18 +12,17 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ChatService {
-    
-    constructor(
+    constructor(    
          private readonly  userService:UserService,
          private readonly  conversationService:ConversationService,
-         private readonly  messageSerivce:MessageService,
+    private readonly messageSerivce: MessageService,
          private readonly participantService:ParticipantService
     ){}
 
 
-    async sendMessage(message:string,senderId:string, conversationId:string):Promise<void>{
-        await this.messageSerivce.create(message,senderId,conversationId);
-    
+    async sendMessage(message:string,senderId:string, conversationId:string):Promise<Message>{
+        return await this.messageSerivce.create(message,senderId,conversationId);
+
     }
 
     async joinConversation(clientd: string, conversationId: string):Promise<boolean> {
