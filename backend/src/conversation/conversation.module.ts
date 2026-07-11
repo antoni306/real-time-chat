@@ -6,9 +6,9 @@ import { Conversation } from './conversation.entity';
 import { ParticipantModule } from 'src/participant/participant.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Conversation]),ParticipantModule],
+  imports: [TypeOrmModule.forFeature([Conversation]), ParticipantModule],
   providers: [ConversationService],
   controllers: [ConversationController],
-  exports:[ConversationService]
+  exports: [ConversationService],
 })
 export class ConversationModule {}

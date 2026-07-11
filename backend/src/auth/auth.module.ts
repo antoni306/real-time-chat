@@ -8,9 +8,9 @@ import { JwtStrategy } from './guard/strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './guard/strategies/jwt-refresh.strategy';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User]),JwtModule.register({})],
+  imports: [TypeOrmModule.forFeature([User]), JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy,JwtRefreshStrategy],
-  exports:[AuthService]
+  providers: [AuthService, JwtStrategy, JwtRefreshStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

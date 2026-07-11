@@ -8,29 +8,31 @@ import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService:AuthService){}
+  constructor(private readonly authService: AuthService) {}
 
+  @Post('register')
+  async register(@Body() registerDto: RegisterDto): Promise<void> {
+    return this.authService.register(registerDto);
+  }
 
-    @Post('register')
-    async register(@Body() registerDto:RegisterDto): Promise<void>{
-        return this.authService.register(registerDto);
-    }
+  @Post('login')
+  async login(
+    @Body() loginDto: LoginDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    return this.authService.login(loginDto);
+  }
 
-    @Post('login')
-    async login(@Body() loginDto:LoginDto):Promise<{accessToken: string;refreshToken: string;}>{
-        return this.authService.login(loginDto);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@CurrentUser() payload: { id: string }) {
+    return this.authService.logout(payload.id);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Post('logout')
-    async logout(@CurrentUser() payload:{id:string}){
-        return this.authService.logout(payload.id);
-    }
-
-    @UseGuards(JwtRefreshGuard)
-    @Post('refreshTokens')
-    async refreshTokens(@CurrentUser() payload:{id:string,refreshToken:string}){
-        return this.authService.refreshTokens(payload.id);
-    }
-
+  @UseGuards(JwtRefreshGuard)
+  @Post('refreshTokens')
+  async refreshTokens(
+    @CurrentUser() payload: { id: string; refreshToken: string },
+  ) {
+    return this.authService.refreshTokens(payload.id);
+  }
 }

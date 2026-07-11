@@ -6,9 +6,9 @@ import { MessageController } from './message.controller';
 import { ParticipantModule } from 'src/participant/participant.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Message]),ParticipantModule],
+  imports: [TypeOrmModule.forFeature([Message]), ParticipantModule],
   providers: [MessageService],
   controllers: [MessageController],
-  exports:[MessageService]
+  exports: [MessageService],
 })
 export class MessageModule {}

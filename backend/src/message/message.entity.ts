@@ -1,22 +1,27 @@
-import { Conversation } from "../conversation/conversation.entity";
-import { User } from "../user/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Conversation } from '../conversation/conversation.entity';
+import { User } from '../user/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity("messages")
+@Entity('messages')
 export class Message {
-    @PrimaryGeneratedColumn("uuid")
-    id:string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({type:"text"})
-    content:string;
+  @Column({ type: 'text' })
+  content: string;
 
-    @CreateDateColumn()
-    createdAt:Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
+  @ManyToOne(() => Conversation, (conversation) => conversation.messages)
+  conversation: Conversation;
 
-    @ManyToOne(()=>Conversation,(conversation)=>conversation.messages)
-    conversation:Conversation;
-
-    @ManyToOne(()=>User,(user)=>user.messages,{onDelete:'CASCADE'})
-    sender:User;
+  @ManyToOne(() => User, (user) => user.messages, { onDelete: 'CASCADE' })
+  sender: User;
 }

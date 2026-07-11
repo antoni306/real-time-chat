@@ -5,28 +5,24 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-
-    constructor(@InjectRepository(User) private readonly userRepo:Repository<User> ){}
-    async findById(id:string):Promise<User>{
-        
-        const user = await this.userRepo.findOneBy({id});
-        if(!user){
-            throw new NotFoundException(`user with id ${id} not found`);
-        }
-        return user;
+  constructor(
+    @InjectRepository(User) private readonly userRepo: Repository<User>,
+  ) {}
+  async findById(id: string): Promise<User> {
+    const user = await this.userRepo.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException(`user with id ${id} not found`);
     }
-    async findByUsername(username:string):Promise<User>{
-        
-        const user = await this.userRepo.findOneBy({username});
-        if(!user){
-            throw new NotFoundException(`user with username ${username} not found`);
-        }
-        return user;
+    return user;
+  }
+  async findByUsername(username: string): Promise<User> {
+    const user = await this.userRepo.findOneBy({ username });
+    if (!user) {
+      throw new NotFoundException(`user with username ${username} not found`);
     }
-    async getAllUsers():Promise<User[]>{
-        return await this.userRepo.find();
-    }
-
-
-
+    return user;
+  }
+  async getAllUsers(): Promise<User[]> {
+    return await this.userRepo.find();
+  }
 }

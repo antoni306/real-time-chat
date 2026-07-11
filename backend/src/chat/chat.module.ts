@@ -8,7 +8,13 @@ import { MessageModule } from 'src/message/message.module';
 import { ParticipantModule } from 'src/participant/participant.module';
 
 @Module({
-  imports:[UserModule,ConversationModule,MessageModule,ParticipantModule,JwtModule.register({})],
-  providers: [ChatService, ChatGateway]
+  imports: [
+    UserModule,
+    ConversationModule,
+    MessageModule,
+    ParticipantModule,
+    JwtModule.register({}),
+  ],
+  providers: [ChatService, ChatGateway],
 })
 export class ChatModule {}
