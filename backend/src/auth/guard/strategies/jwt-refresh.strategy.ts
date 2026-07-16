@@ -27,20 +27,15 @@ export class JwtRefreshStrategy extends PassportStrategy(
       .trim();
     console.log('validate called', payload.sub);
     const signature = bearerToken.split('.').pop() as string;
-    // eslint-disable-next-line no-useless-catch
-    try {
-      console.log(`in validate: ${Date.now()}`);
-      const validToken = await this.authService.validRefreshToken(
-        payload.sub,
-        signature,
-      );
-      if (validToken) {
-        console.log(`jwt-refresh.strategy: token is valid: ${validToken}`);
-        return { id: payload.sub, refreshToken: bearerToken };
-      }
-    } catch (error) {
-      throw error;
+
+    const validToken = await this.authService.validRefreshToken(
+      payload.sub,
+      signature,
+    );
+    if (validToken) {
+      return { id: payload.sub, refreshToken: bearerToken };
     }
+
     return null;
   }
 }

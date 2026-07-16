@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   ArrayMinSize,
   IsArray,
@@ -10,6 +11,16 @@ import {
 import { ConversationType } from './conversation-type.enum';
 
 export class CreateConversationDto {
+  constructor(
+    type: ConversationType,
+    participantsIds: string[],
+    name?: string,
+  ) {
+    this.type = type;
+    this.name = name;
+    this.participantsIds = participantsIds;
+  }
+
   @IsEnum(ConversationType)
   type: ConversationType;
 
