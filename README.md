@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/67d1bff2-f6dc-42a7-bd94-cdbdf00dd623
+
 # Real-Time Chat
 
 A full-stack real-time chat application with JWT authentication, direct and group conversations, and live messaging over WebSockets.
